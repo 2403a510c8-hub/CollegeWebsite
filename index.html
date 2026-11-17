@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Access Request Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f5fa;
+            margin: 0;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 750px;
+            margin: 35px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px #ccc;
+        }
+
+        h2 {
+            color: #172554;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 11px 18px;
+            margin: 15px 8px 0 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .request { background: #2563eb; }
+        .grant { background: #16a34a; }
+        .draft { background: #64748b; }
+        .submit { background: #7c3aed; }
+        .reject { background: #dc2626; }
+
+        #status {
+            margin-top: 20px;
+            padding: 12px;
+            background: #eff6ff;
+            border-radius: 5px;
+            color: #1e40af;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>SR University</h1>
+    <p>College Access Request Management Portal</p>
+</header>
+
+<div class="container">
+
+    <h2>Access Request Form</h2>
+    <p>Submit a request to access college resources.</p>
+
+    <form id="requestForm">
+
+        <label>Student Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+
+        <label>Student ID</label>
+        <input type="text" id="studentId" placeholder="Enter student ID" required>
+
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="Enter email" required>
+
+        <label>Department</label>
+        <select id="department">
+            <option>Computer Science</option>
+            <option>Information Technology</option>
+            <option>Electronics</option>
+            <option>Mechanical</option>
+        </select>
+
+        <label>Access Required</label>
+        <select id="access">
+            <option>Library Resources</option>
+            <option>Computer Lab</option>
+            <option>Project Repository</option>
+            <option>College Portal</option>
+        </select>
+
+        <label>Reason for Request</label>
+        <textarea id="reason" rows="4"
+            placeholder="Enter your reason"></textarea>
+
+        <button type="button" class="draft" onclick="restoreDraft()">
+            Restore to Draft
+        </button>
+
+        <button type="button" class="request" onclick="requestAccess()">
+            Request Access
+        </button>
+
+        <button type="submit" class="submit">
+            Submit Request
+        </button>
+
+        <button type="button" class="grant" onclick="grantAccess()">
+            Grant Access
+        </button>
+
+        <button type="button" class="reject" onclick="rejectAccess()">
+            Reject Request
+        </button>
+
+    </form>
+
+    <div id="status">Status: Draft</div>
+
+</div>
+
+<footer>
+    <p>© 2026 SR University | Access Management System</p>
+</footer>
+
+<script>
+    const form = document.getElementById("requestForm");
+    const statusBox = document.getElementById("status");
+
+    function getFormData() {
+        return {
+            name: document.getElementById("name").value,
+            studentId: document.getElementById("studentId").value,
+            email: document.getElementById("email").value,
+            department: document.getElementById("department").value,
+            access: document.getElementById("access").value,
+            reason: document.getElementById("reason").value
+        };
+    }
+
+    function saveDraft() {
+        localStorage.setItem("accessDraft",
+            JSON.stringify(getFormData()));
+    }
+
+    function restoreDraft() {
+        let data = JSON.parse(localStorage.getItem("accessDraft"));
+
+        if (data) {
+            document.getElementById("name").value = data.name;
+            document.getElementById("studentId").value = data.studentId;
+            document.getElementById("email").value = data.email;
+            document.getElementById("department").value = data.department;
+            document.getElementById("access").value = data.access;
+            document.getElementById("reason").value = data.reason;
+            statusBox.innerHTML = "Status: Draft Restored";
+        } else {
+            statusBox.innerHTML = "No saved draft found.";
+        }
+    }
+
+    function requestAccess() {
+        saveDraft();
+        statusBox.innerHTML = "Status: Access Requested";
+    }
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        if (!form.reportValidity()) return;
+
+        saveDraft();
+        statusBox.innerHTML = "Status: Request Submitted Successfully";
+    });
+
+    function grantAccess() {
+        statusBox.innerHTML = "Status: Access Granted";
+    }
+
+    function rejectAccess() {
+        statusBox.innerHTML = "Status: Request Rejected";
+    }
+</script>
+
+</body>
+</html>
